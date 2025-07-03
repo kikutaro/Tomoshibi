@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>灯しび / Tomoshibi - 想いをそっと灯す場所</title>
+  <meta name="description" content="灯しびは、失った大切な人への想いをそっと灯す場所です。グリーフケアとして、心の中にある言葉を書き留めてください。誰かの想いが、静かにあなたに届くかもしれません。">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Klee One', Meiryo, cursive;
+      background-color: #121212;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .count {
+      font-size: 0.9rem;
+      color: #ccc;
+      margin-bottom: 2rem;
+    }
+    .description {
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      text-align: center;
+      line-height: 1.6;
+    }
+    .form {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 500px;
+    }
+    textarea {
+      resize: none;
+      height: 150px;
+      border: none;
+      border-radius: 8px;
+      padding: 1rem;
+      font-size: 1rem;
+      background-color: #1e1e1e;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    button {
+      background-color: #ff8c42;
+      color: #fff;
+      border: none;
+      padding: 0.8rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .posts {
+      margin-top: 3rem;
+      width: 100%;
+      max-width: 800px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+    .post {
+      background-color: rgba(255,255,255,0.05);
+      padding: 1rem;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      position: relative;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .candle {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      width: 16px;
+      height: 24px;
+      background: radial-gradient(circle, #ffcc00 0%, #ff9900 40%, transparent 70%);
+      animation: flicker 1s infinite alternate;
+    }
+    @keyframes flicker {
+      from { transform: scale(1); opacity: 0.9; }
+      to { transform: scale(1.1); opacity: 0.6; }
+    }
+    .footer {
+      margin-top: 4rem;
+      font-size: 0.85rem;
+      color: #aaa;
+      text-align: center;
+    }
+    .affiliate {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+    .affiliate a {
+      color: #ffd39f;
+      text-decoration: none;
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Klee+One&display=swap" rel="stylesheet">
+</head>
+<body>
+  <h1>灯しび / Tomosh🕯️bi</h1>
+  <img src="logo.png" alt="灯しびのロゴ" style="width: 150px; margin-bottom: 1rem;">
+  <div class="count" id="count">灯された想い：- 件</div>
+  <div class="description">
+    大切な人を永遠に失ったあなたへ<br>
+    言葉にならないその人への想いを、そっと灯す場所です。<br>
+    グリーフケアとして、心の中にある言葉を書き留めてください。<br>
+    誰かの想いが、静かにあなたに届くかもしれません。
+  </div>
+  <form class="form" onsubmit="submitPost(event)">
+    <textarea placeholder="大切な人への想いをここに..." required></textarea>
+    <button type="submit">灯す</button>
+  </form>
+  <p>灯しびはランダムに表示されます。</p>
+  <div class="posts" id="posts">
+    <!-- 投稿がここに表示されます -->
+  </div>
+  <div class="footer">
+    この場所を続けるために、よろしければご支援をお願いします。
+    <div class="affiliate">
+      <a href="#">🕯 お供えキャンドル（楽天）</a> ／ <a href="#">Buy me a Coffee</a>
+    </div>
+  </div>
+  <script>
+    const postsEl = document.getElementById('posts');
+    const textarea = document.querySelector('textarea');
+    const countEl = document.getElementById('count');
+
+    async function submitPost(event) {
+      event.preventDefault();
+      const text = textarea.value.trim();
+      if (!text) return;
+
+      await fetch('http://localhost:3000/api/post', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+      });
+
+      textarea.value = '';
+      loadPosts();
+    }
+
+    async function loadPosts() {
+      const res = await fetch('http://localhost:3000/api/posts');
+      const { posts, count } = await res.json();
+      countEl.textContent = `灯された想い：${count} 件`;
+      postsEl.innerHTML = '';
+      posts.forEach(text => {
+        const postEl = document.createElement('div');
+        postEl.className = 'post';
+        postEl.innerHTML = '<div class="candle"></div>' + text;
+        postsEl.appendChild(postEl);
+      });
+    }
+
+    loadPosts();
+  </script>
+</body>
+</html>
