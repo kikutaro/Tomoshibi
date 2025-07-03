@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const POSTS_FILE = path.join(__dirname, 'posts.json');
 
-app.user(express.static("public"));
+app.use(express.static("public"));
 app.use(cors());
 app.use(express.json());
 
