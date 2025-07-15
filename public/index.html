@@ -141,7 +141,7 @@
       const text = textarea.value.trim();
       if (!text) return;
 
-      await fetch('http://tomoshibi.life/api/post', {
+      await fetch('https://tomoshibi.life/api/post', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: text })
@@ -152,7 +152,7 @@
     }
 
     async function loadPosts() {
-      const res = await fetch('http://tomoshibi.life/api/posts');
+      const res = await fetch('https://tomoshibi.life/api/posts');
       const { posts, count } = await res.json();
       countEl.textContent = `灯された想い：${count} 件`;
       postsEl.innerHTML = '';
