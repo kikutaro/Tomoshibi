@@ -115,7 +115,7 @@
     大切な人を永遠に失ったあなたへ<br>
     言葉にならないその人への想いを、そっと灯す場所です。<br>
     グリーフケアとして、心の中にある言葉を書き留めてください。<br>
-    誰かの想いが、静かにあなたに届くかもしれません。
+    あなたの想いが、静かに誰かへ届くかもしれません。
   </div>
   <form class="form" onsubmit="submitPost(event)">
     <textarea placeholder="大切な人への想いをここに..." required></textarea>
@@ -141,7 +141,7 @@
       const text = textarea.value.trim();
       if (!text) return;
 
-      await fetch('http://localhost:3000/api/post', {
+      await fetch('http://tomoshibi.life/api/post', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: text })
@@ -152,7 +152,7 @@
     }
 
     async function loadPosts() {
-      const res = await fetch('http://localhost:3000/api/posts');
+      const res = await fetch('http://tomoshibi.life/api/posts');
       const { posts, count } = await res.json();
       countEl.textContent = `灯された想い：${count} 件`;
       postsEl.innerHTML = '';
